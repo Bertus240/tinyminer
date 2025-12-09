@@ -7,13 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- DESIGN SYSTEM (Orange) --- */
+        /* --- DESIGN SYSTEM V7 (Orange & Stable) --- */
         :root {
             --bg-dark: #09090b;
             --bg-gradient: radial-gradient(circle at 50% -20%, #3a2400 0%, #09090b 60%);
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --accent: #FFAD00;
+            --accent: #FFAD00; /* Orange */
             --accent-glow: rgba(255, 173, 0, 0.15);
             --danger: #ff453a;
             --success: #32d74b;
@@ -31,6 +31,7 @@
             min-height: 100vh;
             display: flex; flex-direction: column; align-items: center;
             padding: 20px; box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* HEADER */
@@ -43,6 +44,33 @@
         .brand span { color: var(--accent); }
         .brand p { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
 
+        .btn-icon {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            color: #fff; width: 44px; height: 44px;
+            border-radius: 12px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s; touch-action: manipulation;
+        }
+        .btn-icon:hover { border-color: var(--accent); background: var(--accent-glow); }
+
+        /* SETTINGS PANEL */
+        #settingsPanel {
+            display: none; width: 100%; max-width: 500px;
+            background: #121214; border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); box-sizing: border-box;
+        }
+        input {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid #333;
+            padding: 12px; border-radius: 8px; color: #fff; box-sizing: border-box; margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .btn-save {
+            width: 100%; background: var(--accent); color: #000; border: none;
+            padding: 14px; border-radius: 8px; font-weight: 800; cursor: pointer;
+            font-size: 1rem;
+        }
+
         /* GRID */
         .grid {
             display: grid;
@@ -52,9 +80,10 @@
 
         /* CARDS */
         .card {
-            background: var(--glass-bg); backdrop-filter: blur(12px);
+            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border); border-radius: 20px;
             padding: 20px; position: relative; overflow: hidden;
+            transition: transform 0.2s;
         }
         
         .card-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
@@ -74,17 +103,23 @@
         }
         .dot.online { background: var(--success); box-shadow: 0 0 8px var(--success); }
 
-        /* DEBUG BOX */
-        #debugConsole {
-            width: 100%; max-width: 900px; margin-top: 30px;
-            background: #000; border: 1px solid #333; padding: 15px;
-            font-family: monospace; font-size: 0.8rem; color: #0f0;
-            border-radius: 10px; display: none; /* Caché si tout va bien */
-            word-wrap: break-word;
+        /* LOADER & ERROR */
+        .loader { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 0.3s; z-index: 99; }
+        
+        #errorMsg { 
+            color: var(--danger); font-size: 0.8rem; margin-top: 10px; display: none; 
+            text-align: center; width: 100%; background: rgba(255, 69, 58, 0.1); padding: 10px; border-radius: 8px;
         }
 
-        /* LOADER */
-        .loader { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 0.3s; z-index: 99; }
+        /* MOBILE */
+        @media (max-width: 600px) {
+            body { padding: 15px; }
+            header { margin-bottom: 20px; }
+            .brand h1 { font-size: 1.3rem; }
+            .grid { grid-template-columns: 1fr; }
+            .card { padding: 18px; }
+            .card-value { font-size: 1.8rem; }
+        }
     </style>
 </head>
 <body>
@@ -94,9 +129,19 @@
     <header>
         <div class="brand">
             <h1>NERD<span>MINER</span></h1>
-            <p>Station Solaire • Dashboard V6</p>
+            <p>Station Solaire • Dashboard V7</p>
         </div>
+        <button class="btn-icon" onclick="toggleSettings()">⚙️</button>
     </header>
+
+    <div id="settingsPanel">
+        <h3 style="margin-top:0">Réglages</h3>
+        <label style="font-size:0.8rem; color:#888;">Adresse Bitcoin</label>
+        <input type="text" id="btcInput">
+        <label style="font-size:0.8rem; color:#888;">IP Locale</label>
+        <input type="text" id="ipInput">
+        <button class="btn-save" onclick="saveSettings()">ENREGISTRER</button>
+    </div>
 
     <div class="grid">
         <div class="card">
@@ -107,6 +152,7 @@
             <div style="font-size: 0.85rem; color: #aaa;">
                 Dernier contact : <span id="lastSeen" style="color:#fff">--:--</span>
             </div>
+            <div id="errorMsg"></div>
         </div>
 
         <div class="card">
@@ -124,6 +170,7 @@
                 <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             </div>
             <div class="card-value" id="workersCount">0</div>
+            <div style="font-size:0.8rem; color:#666; margin-top:5px;">Appareils connectés</div>
         </div>
 
         <div class="card">
@@ -132,43 +179,68 @@
                 <svg width="18" height="18" fill="none" stroke="#f2a900" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z"></path></svg>
             </div>
             <div class="card-value" id="bestDiff">0</div>
+            <div class="sub-value" style="color:#888; font-size:0.75rem;">Record de session</div>
         </div>
     </div>
 
-    <div id="debugConsole">Initialisation du système...</div>
+    <div style="margin-top: 40px; text-align: center; padding-bottom: 20px;">
+        <a id="publicPoolLink" href="#" target="_blank" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; border-bottom: 1px dotted #555;">
+            Voir sur Public-Pool.io ↗
+        </a>
+    </div>
 
     <script>
-        // Ton adresse
-        const myAddress = "bc1pns5myh0qlfl3wyzed4rqy86c6p26fv5z9g0qr7ne74rc3kaa7a4sjn0rlf";
-        const apiUrl = `https://web.public-pool.io/api/miners?address=${myAddress}`;
+        // --- CONFIGURATION ---
+        const defaultBTC = "bc1pns5myh0qlfl3wyzed4rqy86c6p26fv5z9g0qr7ne74rc3kaa7a4sjn0rlf";
+        const defaultIP = "192.168.1.49";
 
-        // Fonction pour afficher les erreurs à l'écran
-        function logDebug(msg, isError = false) {
-            const consoleBox = document.getElementById('debugConsole');
-            consoleBox.style.display = 'block'; // On affiche la boite
-            const color = isError ? '#ff453a' : '#00ff9d';
-            consoleBox.innerHTML += `<div style="color:${color}; margin-top:5px;">> ${msg}</div>`;
+        let myAddress = localStorage.getItem('nerd_btc') || defaultBTC;
+        let myIp = localStorage.getItem('nerd_ip') || defaultIP;
+
+        document.getElementById('btcInput').value = myAddress;
+        document.getElementById('ipInput').value = myIp;
+        document.getElementById('publicPoolLink').href = `https://web.public-pool.io/#/app/${myAddress}`;
+
+        function toggleSettings() {
+            const p = document.getElementById('settingsPanel');
+            p.style.display = p.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function saveSettings() {
+            const addr = document.getElementById('btcInput').value.trim();
+            const ip = document.getElementById('ipInput').value.trim();
+            if(addr) {
+                localStorage.setItem('nerd_btc', addr);
+                localStorage.setItem('nerd_ip', ip);
+                location.reload();
+            }
         }
 
         async function fetchStats() {
             document.getElementById('loader').style.width = "100%";
+            document.getElementById('errorMsg').style.display = "none";
             
-            try {
-                logDebug("Tentative de connexion à Public Pool...");
-                
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                logDebug("Données reçues avec succès !");
+            // 1. URL Cible
+            const targetUrl = `https://web.public-pool.io/api/miners?address=${myAddress}`;
+            
+            // 2. LE PASSE-PARTOUT (PROXY)
+            // On utilise 'allorigins' pour contourner le blocage CORS
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
 
-                // Mise à jour des valeurs
+            try {
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error("Erreur Proxy");
+                
+                const proxyData = await response.json();
+                
+                // 3. On récupère les vraies données qui sont dans "contents"
+                const data = JSON.parse(proxyData.contents);
+
+                // --- MISE A JOUR DES CHIFFRES ---
+                
+                // Hashrate
                 let currentHashrate = data.hashrate1m || 0;
                 
-                // Statut
                 if (currentHashrate > 0) {
                     document.getElementById('statusDot').className = "dot online";
                     document.getElementById('statusText').innerText = "ONLINE";
@@ -179,45 +251,33 @@
                     document.getElementById('statusText').style.color = "var(--danger)";
                 }
 
-                // Chiffres
                 document.getElementById('hashrate').innerText = (currentHashrate / 1000).toFixed(2);
                 document.getElementById('hashrate24').innerText = (data.hashrate24h / 1000).toFixed(2);
-                
+
+                // Workers
                 let workerCount = 0;
                 if (data.workers) workerCount = Object.keys(data.workers).length;
                 document.getElementById('workersCount').innerText = workerCount;
 
+                // Best Diff
                 let best = data.bestDifficulty || 0;
                 document.getElementById('bestDiff').innerText = best.toLocaleString();
 
+                // Last Seen
                 let now = new Date();
                 document.getElementById('lastSeen').innerText = now.toLocaleTimeString();
 
-                // Si tout marche, on cache la boite de debug au bout de 2 sec
-                setTimeout(() => {
-                    document.getElementById('debugConsole').style.display = 'none';
-                }, 5000);
-
             } catch (err) {
                 console.error(err);
-                document.getElementById('statusText').innerText = "ERREUR";
-                document.getElementById('statusText').style.color = "var(--danger)";
-                
-                logDebug("ERREUR FATALE : " + err.message, true);
-                
-                if (err.message.includes("Failed to fetch") || err.message.includes("NetworkError")) {
-                    logDebug("⚠️ PROBLÈME CORS DÉTECTÉ !", true);
-                    logDebug("Tu as ouvert ce fichier en double-cliquant dessus (file://).", true);
-                    logDebug("SOLUTION : Tu dois héberger ce fichier sur GitHub Pages pour que ça marche.", true);
-                }
+                document.getElementById('statusText').innerText = "Erreur";
+                document.getElementById('errorMsg').style.display = "block";
+                document.getElementById('errorMsg').innerText = "Le serveur ne répond pas. Vérifie ton adresse BTC.";
             }
             
-            document.getElementById('loader').style.width = "0%";
+            setTimeout(() => { document.getElementById('loader').style.width = "0%"; }, 500);
         }
 
-        // Lancement
         fetchStats();
-        // Rafraîchir toutes les 30s
         setInterval(fetchStats, 30000);
     </script>
 </body>
