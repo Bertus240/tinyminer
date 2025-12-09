@@ -8,91 +8,22 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
-        /* --- DESIGN SYSTEM V12 (Orange & Debug) --- */
-        :root {
-            --bg-dark: #09090b;
-            --bg-gradient: radial-gradient(circle at 50% -20%, #3a2400 0%, #09090b 60%);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --accent: #FFAD00;
-            --accent-glow: rgba(255, 173, 0, 0.15);
-            --danger: #ff453a;
-            --success: #32d74b;
-            --text-main: #ffffff;
-            --text-muted: #888888;
-        }
-
-        body {
-            background: var(--bg-dark);
-            background-image: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 20px; box-sizing: border-box;
-        }
-
-        header {
-            width: 100%; max-width: 900px;
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px; padding-top: 10px;
-        }
-        .brand h1 { font-weight: 900; font-size: 1.5rem; margin: 0; }
-        .brand span { color: var(--accent); }
-        .brand p { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
-
-        .chart-container {
-            width: 100%; max-width: 900px; height: 220px;
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: 20px; padding: 15px; box-sizing: border-box;
-            margin-bottom: 20px; position: relative;
-        }
-
-        .grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 15px; width: 100%; max-width: 900px;
-        }
-
-        .card {
-            background: var(--glass-bg); backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border); border-radius: 20px;
-            padding: 20px; position: relative; overflow: hidden;
-        }
+        /* --- DESIGN V13 --- */
+        :root { --bg-dark: #09090b; --bg-gradient: radial-gradient(circle at 50% -20%, #3a2400 0%, #09090b 60%); --glass-bg: rgba(255, 255, 255, 0.03); --glass-border: rgba(255, 255, 255, 0.08); --accent: #FFAD00; --danger: #ff453a; --success: #32d74b; --text-main: #ffffff; --text-muted: #888888; }
+        body { background: var(--bg-dark); background-image: var(--bg-gradient); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
+        header { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .brand h1 { font-weight: 900; font-size: 1.5rem; margin: 0; } .brand span { color: var(--accent); } .brand p { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
+        .chart-container { width: 100%; max-width: 900px; height: 220px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px; box-sizing: border-box; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; width: 100%; max-width: 900px; }
+        .card { background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; }
         .card-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; display: block;}
         .card-value { font-size: 1.8rem; font-weight: 800; white-space: nowrap; }
-        .unit { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
         .sub-value { font-size: 0.75rem; color: var(--accent); margin-top: 5px; }
-
-        .status-dot {
-            display: inline-block; width: 8px; height: 8px; border-radius: 50%; 
-            background: var(--danger); box-shadow: 0 0 8px var(--danger); margin-right: 5px;
-        }
-        .status-dot.online { background: var(--success); box-shadow: 0 0 8px var(--success); }
-        
-        /* LOG CONSOLE VISIBLE */
-        #consoleLog {
-            margin-top: 30px; width: 100%; max-width: 900px;
-            background: #111; color: #00ff9d; font-family: monospace; font-size: 0.75rem;
-            padding: 15px; border-radius: 10px; border: 1px solid #333;
-            min-height: 50px; white-space: pre-wrap; word-break: break-all;
-        }
-
-        /* BOUTON SECOURS */
-        #rescueBtn {
-            display: none; margin-top: 20px;
-            background: var(--accent); color: #000; text-decoration: none;
-            padding: 15px 30px; border-radius: 50px; font-weight: 800;
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-
-        @media (max-width: 600px) {
-            .grid { grid-template-columns: 1fr 1fr; }
-            .card { padding: 15px; }
-            .card-value { font-size: 1.4rem; }
-            .chart-container { height: 180px; }
-        }
+        .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--danger); margin-right: 5px; }
+        .status-dot.online { background: var(--success); }
+        #consoleLog { margin-top: 30px; width: 100%; max-width: 900px; background: #111; color: #00ff9d; font-family: monospace; font-size: 0.75rem; padding: 15px; border-radius: 10px; border: 1px solid #333; min-height: 50px; white-space: pre-wrap; word-break: break-all; }
+        #rescueBtn { display: none; margin-top: 20px; background: var(--accent); color: #000; text-decoration: none; padding: 15px 30px; border-radius: 50px; font-weight: 800; }
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } .card { padding: 15px; } .card-value { font-size: 1.4rem; } .chart-container { height: 180px; } }
     </style>
 </head>
 <body>
@@ -105,52 +36,32 @@
         <button onclick="location.reload()" style="background:none; border:1px solid #555; color:#fff; padding:5px 10px; border-radius:5px;">↻</button>
     </header>
 
-    <div class="chart-container">
-        <canvas id="hashrateChart"></canvas>
-    </div>
+    <div class="chart-container"><canvas id="hashrateChart"></canvas></div>
 
     <div class="grid">
-        <div class="card">
-            <span class="card-label">Puissance</span>
-            <div class="card-value"><span id="hashrate">0.00</span> <span class="unit">KH/s</span></div>
-            <div class="sub-value">Moy 24h: <span id="hashrate24">0</span></div>
-        </div>
-        <div class="card">
-            <span class="card-label">Best Diff</span>
-            <div class="card-value" id="bestDiff">0</div>
-            <div class="sub-value">Record Session</div>
-        </div>
-        <div class="card">
-            <span class="card-label">Mineurs</span>
-            <div class="card-value" id="workersCount">0</div>
-            <div class="sub-value">Actifs</div>
-        </div>
-        <div class="card">
-            <span class="card-label">Dernier Signal</span>
-            <div class="card-value" style="font-size: 1.2rem;" id="lastSeen">--:--</div>
-        </div>
+        <div class="card"><span class="card-label">Puissance</span><div class="card-value"><span id="hashrate">0.00</span> <span style="font-size:0.9rem; color:#888;">KH/s</span></div><div class="sub-value">Moy 24h: <span id="hashrate24">0</span></div></div>
+        <div class="card"><span class="card-label">Best Diff</span><div class="card-value" id="bestDiff">0</div><div class="sub-value">Record Session</div></div>
+        <div class="card"><span class="card-label">Mineurs</span><div class="card-value" id="workersCount">0</div><div class="sub-value">Actifs</div></div>
+        <div class="card"><span class="card-label">Dernier Signal</span><div class="card-value" style="font-size: 1.2rem;" id="lastSeen">--:--</div></div>
     </div>
 
     <a id="rescueBtn" href="#" target="_blank">OUVRIR PAGE OFFICIELLE</a>
-
-    <div id="consoleLog">Démarrage Système V12...<br></div>
+    <div id="consoleLog">Démarrage V13...<br></div>
 
     <script>
         const myAddress = "bc1pns5myh0qlfl3wyzed4rqy86c6p26fv5z9g0qr7ne74rc3kaa7a4sjn0rlf";
-        const directUrl = `https://web.public-pool.io/api/miners?address=${myAddress}`;
         
-        // --- PROXY MAGIQUE (Raw) ---
-        // Utilise 'allorigins.win/raw' pour éviter les erreurs de parsing JSON
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
+        // --- NOUVELLE STRATEGIE V13 ---
+        // On utilise 'cors-anywhere' qui est souvent plus fiable
+        const target = `https://web.public-pool.io/api/miners?address=${myAddress}`;
+        const proxy = `https://corsproxy.io/?`; // On teste celui-ci en priorité
 
         function logger(msg, type='info') {
             const el = document.getElementById('consoleLog');
             const color = type === 'error' ? '#ff453a' : '#00ff9d';
-            const time = new Date().toLocaleTimeString();
-            el.innerHTML += `<span style="color:${color}">[${time}] ${msg}</span><br>`;
+            el.innerHTML += `<span style="color:${color}">[${new Date().toLocaleTimeString()}] ${msg}</span><br>`;
         }
 
-        // --- CHART SETUP ---
         let chartInstance = null;
         function initChart() {
             const ctx = document.getElementById('hashrateChart');
@@ -158,93 +69,68 @@
             const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 200);
             gradient.addColorStop(0, 'rgba(255, 173, 0, 0.4)');
             gradient.addColorStop(1, 'rgba(255, 173, 0, 0.0)');
-
             chartInstance = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Hashrate', data: [], borderColor: '#FFAD00', backgroundColor: gradient,
-                        borderWidth: 2, pointRadius: 0, fill: true, tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { display: false }, y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } } }
-                }
+                data: { labels: [], datasets: [{ label: 'Hashrate', data: [], borderColor: '#FFAD00', backgroundColor: gradient, borderWidth: 2, pointRadius: 0, fill: true, tension: 0.4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } } } }
             });
         }
 
-        // --- FETCH ENGINE ---
         async function fetchStats() {
-            logger("📡 Tentative de connexion via Proxy...");
-            
+            logger("📡 Connexion V13...");
             try {
-                // On utilise le Proxy RAW
-                const response = await fetch(proxyUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
+                // Essai direct via corsproxy.io
+                const res = await fetch(proxy + encodeURIComponent(target));
+                if (!res.ok) throw new Error("Erreur HTTP " + res.status);
                 
                 const data = await response.json();
+                
+                // Si on est là, c'est gagné
                 logger("✅ DONNÉES REÇUES !");
-
-                // UI UPDATE
-                let hr = data.hashrate1m || 0;
-                
-                if (hr > 0) {
-                    document.getElementById('connectionStatus').innerText = "ONLINE";
-                    document.getElementById('connectionStatus').style.color = "#32d74b";
-                } else {
-                    document.getElementById('connectionStatus').innerText = "OFFLINE";
-                    document.getElementById('connectionStatus').style.color = "#ff453a";
-                }
-
-                document.getElementById('hashrate').innerText = (hr / 1000).toFixed(2);
-                document.getElementById('hashrate24').innerText = (data.hashrate24h / 1000).toFixed(2);
-                
-                let wCount = data.workers ? Object.keys(data.workers).length : 0;
-                document.getElementById('workersCount').innerText = wCount;
-
-                document.getElementById('bestDiff').innerText = (data.bestDifficulty || 0).toLocaleString();
-                
-                let now = new Date();
-                document.getElementById('lastSeen').innerText = now.toLocaleTimeString();
-
-                // UPDATE CHART
-                if (chartInstance) {
-                    if (chartInstance.data.labels.length > 20) {
-                        chartInstance.data.labels.shift();
-                        chartInstance.data.datasets[0].data.shift();
-                    }
-                    chartInstance.data.labels.push(now.toLocaleTimeString());
-                    chartInstance.data.datasets[0].data.push(hr / 1000);
-                    chartInstance.update();
-                }
+                updateUI(data);
 
             } catch (err) {
-                console.error(err);
-                document.getElementById('connectionStatus').innerText = "ERREUR";
-                document.getElementById('connectionStatus').style.color = "#ff453a";
-                logger(`❌ ERREUR: ${err.message}`, 'error');
-                logger("⚠️ Le proxy bloque peut-être. Utilise le bouton de secours.", 'error');
-                
-                // Afficher le bouton de secours
-                const btn = document.getElementById('rescueBtn');
-                btn.href = `https://web.public-pool.io/#/app/${myAddress}`;
-                btn.style.display = "inline-block";
+                // Si ça échoue, on tente une méthode de secours (JSONP simulé)
+                logger("⚠️ Echec méthode 1, tentative méthode 2...");
+                try {
+                    const res2 = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(target)}`);
+                    const json2 = await res2.json();
+                    if(json2.contents) {
+                        logger("✅ DONNÉES REÇUES (Méthode 2) !");
+                        updateUI(JSON.parse(json2.contents));
+                    } else { throw new Error("Vide"); }
+                } catch(e2) {
+                    logger("❌ ECHEC TOTAL. Le serveur bloque tout.", 'error');
+                    document.getElementById('rescueBtn').href = `https://web.public-pool.io/#/app/${myAddress}`;
+                    document.getElementById('rescueBtn').style.display = "inline-block";
+                }
             }
-            
-            setTimeout(() => { document.getElementById('loader').style.width = "0%"; }, 500);
         }
 
-        window.onload = function() {
-            initChart();
-            fetchStats();
-            setInterval(fetchStats, 30000);
-        };
+        function updateUI(data) {
+            let hr = data.hashrate1m || 0;
+            if (hr > 0) {
+                document.getElementById('connectionStatus').innerText = "ONLINE";
+                document.getElementById('connectionStatus').style.color = "#32d74b";
+            } else {
+                document.getElementById('connectionStatus').innerText = "OFFLINE";
+                document.getElementById('connectionStatus').style.color = "#ff453a";
+            }
+            document.getElementById('hashrate').innerText = (hr / 1000).toFixed(2);
+            document.getElementById('hashrate24').innerText = (data.hashrate24h / 1000).toFixed(2);
+            document.getElementById('workersCount').innerText = data.workers ? Object.keys(data.workers).length : 0;
+            document.getElementById('bestDiff').innerText = (data.bestDifficulty || 0).toLocaleString();
+            document.getElementById('lastSeen').innerText = new Date().toLocaleTimeString();
+
+            if (chartInstance) {
+                if (chartInstance.data.labels.length > 20) { chartInstance.data.labels.shift(); chartInstance.data.datasets[0].data.shift(); }
+                chartInstance.data.labels.push(new Date().toLocaleTimeString());
+                chartInstance.data.datasets[0].data.push(hr / 1000);
+                chartInstance.update();
+            }
+        }
+
+        window.onload = function() { initChart(); fetchStats(); setInterval(fetchStats, 30000); };
     </script>
 </body>
 </html>
