@@ -7,13 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- DESIGN SYSTEM V7 (Orange & Stable) --- */
+        /* --- DESIGN SYSTEM V8 (Orange & Robust) --- */
         :root {
             --bg-dark: #09090b;
             --bg-gradient: radial-gradient(circle at 50% -20%, #3a2400 0%, #09090b 60%);
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --accent: #FFAD00; /* Orange */
+            --accent: #FFAD00;
             --accent-glow: rgba(255, 173, 0, 0.15);
             --danger: #ff453a;
             --success: #32d74b;
@@ -129,7 +129,7 @@
     <header>
         <div class="brand">
             <h1>NERD<span>MINER</span></h1>
-            <p>Station Solaire • Dashboard V7</p>
+            <p>Station Solaire • Dashboard V8</p>
         </div>
         <button class="btn-icon" onclick="toggleSettings()">⚙️</button>
     </header>
@@ -220,35 +220,39 @@
             document.getElementById('loader').style.width = "100%";
             document.getElementById('errorMsg').style.display = "none";
             
-            // 1. URL Cible
-            const targetUrl = `https://web.public-pool.io/api/miners?address=${myAddress}`;
+            const apiUrl = `https://web.public-pool.io/api/miners?address=${myAddress}`;
             
-            // 2. LE PASSE-PARTOUT (PROXY)
-            // On utilise 'allorigins' pour contourner le blocage CORS
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+            // --- MODIF V8 : Nouveau Proxy plus robuste ---
+            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
 
             try {
                 const response = await fetch(proxyUrl);
                 if (!response.ok) throw new Error("Erreur Proxy");
                 
-                const proxyData = await response.json();
-                
-                // 3. On récupère les vraies données qui sont dans "contents"
-                const data = JSON.parse(proxyData.contents);
+                // Avec ce proxy, on reçoit directement le JSON (pas de 'contents')
+                const data = await response.json();
 
                 // --- MISE A JOUR DES CHIFFRES ---
                 
                 // Hashrate
                 let currentHashrate = data.hashrate1m || 0;
                 
+                // Statut basé sur le Hashrate (Plus fiable)
                 if (currentHashrate > 0) {
                     document.getElementById('statusDot').className = "dot online";
                     document.getElementById('statusText').innerText = "ONLINE";
                     document.getElementById('statusText').style.color = "var(--success)";
                 } else {
-                    document.getElementById('statusDot').className = "dot";
-                    document.getElementById('statusText').innerText = "OFFLINE";
-                    document.getElementById('statusText').style.color = "var(--danger)";
+                    // Vérif de secours sur le hashrate 24h
+                    if (data.hashrate24h > 0) {
+                         document.getElementById('statusDot').className = "dot online";
+                         document.getElementById('statusText').innerText = "ONLINE (Low)";
+                         document.getElementById('statusText').style.color = "var(--success)";
+                    } else {
+                        document.getElementById('statusDot').className = "dot";
+                        document.getElementById('statusText').innerText = "OFFLINE";
+                        document.getElementById('statusText').style.color = "var(--danger)";
+                    }
                 }
 
                 document.getElementById('hashrate').innerText = (currentHashrate / 1000).toFixed(2);
@@ -271,7 +275,7 @@
                 console.error(err);
                 document.getElementById('statusText').innerText = "Erreur";
                 document.getElementById('errorMsg').style.display = "block";
-                document.getElementById('errorMsg').innerText = "Le serveur ne répond pas. Vérifie ton adresse BTC.";
+                document.getElementById('errorMsg').innerText = "Connexion serveur difficile. Réessaie dans 30s.";
             }
             
             setTimeout(() => { document.getElementById('loader').style.width = "0%"; }, 500);
