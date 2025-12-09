@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NerdMiner Dashboard • Rémi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- DESIGN SYSTEM V4 (Orange #FFAD00) --- */
+        :root {
+            --bg-dark: #09090b;
+            /* Fond avec une touche légère d'orange au centre */
+            --bg-gradient: radial-gradient(circle at 50% -20%, #3a2400 0%, #09090b 60%);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #FFAD00; /* TA COULEUR ORANGE */
+            --accent-glow: rgba(255, 173, 0, 0.15);
+            --danger: #ff453a;
+            --success: #32d74b;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 20px; box-sizing: border-box;
+        }
+
+        /* HEADER */
+        header {
+            width: 100%; max-width: 900px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px; padding-top: 10px;
+        }
+        .brand h1 { font-weight: 900; font-size: 1.5rem; margin: 0; letter-spacing: -0.5px; }
+        .brand span { color: var(--accent); }
+        .brand p { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
+
+        .btn-icon {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            color: #fff; width: 40px; height: 40px; border-radius: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+        }
+        .btn-icon:hover { border-color: var(--accent); background: var(--accent-glow); }
+
+        /* SETTINGS PANEL */
+        #settingsPanel {
+            display: none; width: 100%; max-width: 500px;
+            background: #121214; border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        input {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid #333;
+            padding: 12px; border-radius: 8px; color: #fff; box-sizing: border-box; margin-bottom: 10px;
+        }
+        .btn-save {
+            width: 100%; background: var(--accent); color: #000; border: none;
+            padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px; width: 100%; max-width: 900px;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--glass-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 20px; position: relative; overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.15); }
+
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .card-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .card-value { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+        .unit { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+        .sub-value { font-size: 0.8rem; color: var(--accent); margin-top: 5px; }
+
+        /* STATUS BADGE */
+        .status-badge {
+            display: inline-flex; align-items: center; padding: 4px 10px;
+            background: rgba(255,255,255,0.05); border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+        }
+        .dot {
+            width: 8px; height: 8px; border-radius: 50%; margin-right: 6px;
+            background: var(--danger); box-shadow: 0 0 8px var(--danger);
+        }
+        .dot.online { background: var(--success); box-shadow: 0 0 8px var(--success); }
+
+        /* LOADER */
+        .loader { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); width: 0%; transition: width 0.3s; }
+        
+        /* ERROR MSG */
+        #errorMsg { 
+            color: var(--danger); font-size: 0.8rem; margin-top: 5px; display: none; 
+            text-align: center; width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader" class="loader"></div>
+
+    <header>
+        <div class="brand">
+            <h1>NERD<span>MINER</span></h1>
+            <p>Station Solaire • Dashboard V4</p>
+        </div>
+        <button class="btn-icon" onclick="toggleSettings()">⚙️</button>
+    </header>
+
+    <div id="settingsPanel">
+        <h3 style="margin-top:0">Réglages</h3>
+        <label style="font-size:0.8rem; color:#888;">Adresse Bitcoin</label>
+        <input type="text" id="btcInput">
+        <label style="font-size:0.8rem; color:#888;">IP Locale (pour accès interne)</label>
+        <input type="text" id="ipInput">
+        <button class="btn-save" onclick="saveSettings()">ENREGISTRER</button>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-label">État Réseau</span>
+                <div class="status-badge"><div id="statusDot" class="dot"></div><span id="statusText">Offline</span></div>
+            </div>
+            <div style="font-size: 0.85rem; color: #aaa;">
+                Dernier contact : <span id="lastSeen" style="color:#fff">--:--</span>
+            </div>
+            <div id="errorMsg"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-label">Puissance Live</span>
+                <svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+            </div>
+            <div class="card-value"><span id="hashrate">0.00</span> <span class="unit">KH/s</span></div>
+            <div class="sub-value">Moyenne 24h : <span id="hashrate24">0</span> KH/s</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-label">Mineurs Actifs</span>
+                <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <div class="card-value" id="workersCount">0</div>
+            <div style="font-size:0.8rem; color:#666; margin-top:5px;">Appareils connectés</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-label">Best Difficulty</span>
+                <svg width="18" height="18" fill="none" stroke="#f2a900" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z"></path></svg>
+            </div>
+            <div class="card-value" id="bestDiff">0</div>
+            <div class="sub-value" style="color:#888; font-size:0.75rem;">Record de session</div>
+        </div>
+    </div>
+
+    <div style="margin-top: 40px; text-align: center;">
+        <a id="publicPoolLink" href="#" target="_blank" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; border-bottom: 1px dotted #555;">
+            Voir sur Public-Pool.io ↗
+        </a>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        // Ton adresse déjà intégrée (Ne touche pas)
+        const defaultBTC = "bc1pns5myh0qlfl3wyzed4rqy86c6p26fv5z9g0qr7ne74rc3kaa7a4sjn0rlf";
+        const defaultIP = "192.168.1.49";
+
+        let myAddress = localStorage.getItem('nerd_btc') || defaultBTC;
+        let myIp = localStorage.getItem('nerd_ip') || defaultIP;
+
+        document.getElementById('btcInput').value = myAddress;
+        document.getElementById('ipInput').value = myIp;
+        document.getElementById('publicPoolLink').href = `https://web.public-pool.io/#/app/${myAddress}`;
+
+        function toggleSettings() {
+            const p = document.getElementById('settingsPanel');
+            p.style.display = p.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function saveSettings() {
+            const addr = document.getElementById('btcInput').value.trim();
+            const ip = document.getElementById('ipInput').value.trim();
+            if(addr) {
+                localStorage.setItem('nerd_btc', addr);
+                localStorage.setItem('nerd_ip', ip);
+                location.reload();
+            }
+        }
+
+        async function fetchStats() {
+            document.getElementById('loader').style.width = "100%";
+            document.getElementById('errorMsg').style.display = "none";
+            
+            // API officielle Public Pool
+            const apiUrl = `https://web.public-pool.io/api/miners?address=${myAddress}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error("Réponse serveur invalide");
+                
+                const data = await response.json();
+
+                // 1. Hashrate & Statut
+                let currentHashrate = data.hashrate1m || 0;
+                
+                if (currentHashrate > 0) {
+                    document.getElementById('statusDot').className = "dot online";
+                    document.getElementById('statusText').innerText = "ONLINE";
+                    document.getElementById('statusText').style.color = "var(--success)";
+                } else {
+                    document.getElementById('statusDot').className = "dot";
+                    document.getElementById('statusText').innerText = "OFFLINE";
+                    document.getElementById('statusText').style.color = "var(--danger)";
+                }
+
+                document.getElementById('hashrate').innerText = (currentHashrate / 1000).toFixed(2);
+                document.getElementById('hashrate24').innerText = (data.hashrate24h / 1000).toFixed(2);
+
+                // 2. Workers (Nouveau !)
+                // Parfois l'API renvoie 'workers' (array) ou 'workersCount'
+                let workerCount = 0;
+                if (data.workers) workerCount = Object.keys(data.workers).length;
+                document.getElementById('workersCount').innerText = workerCount;
+
+                // 3. Best Difficulty
+                let best = data.bestDifficulty || 0;
+                document.getElementById('bestDiff').innerText = best.toLocaleString();
+
+                // 4. Last Seen
+                let now = new Date();
+                document.getElementById('lastSeen').innerText = now.toLocaleTimeString();
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('statusText').innerText = "Erreur Données";
+                document.getElementById('errorMsg').style.display = "block";
+                document.getElementById('errorMsg').innerText = "⚠️ Si tu es en local, mets ce fichier sur GitHub Pages ! (Blocage sécurité)";
+            }
+            
+            setTimeout(() => { document.getElementById('loader').style.width = "0%"; }, 500);
+        }
+
+        fetchStats();
+        setInterval(fetchStats, 30000);
+    </script>
+</body>
+</html>
