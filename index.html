@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     
     <style>
-        /* --- DESIGN SYSTEM V58 (MOBILE FIRST) --- */
+        /* --- DESIGN SYSTEM V60 --- */
         :root {
             --bg: #000000;
             --accent: #FFAD00;
@@ -43,7 +43,7 @@
             padding: var(--safe-top) 15px 0 15px; z-index: 100; flex-shrink: 0;
         }
         .brand-group { display: flex; flex-direction: column; }
-        .brand h1 { font-size: 1.1rem; margin: 0; font-weight: 900; letter-spacing: -0.5px; }
+        .brand h1 { font-size: 1.2rem; margin: 0; font-weight: 900; letter-spacing: -0.5px; }
         .brand span { color: var(--accent); }
         .btc-ticker { font-size: 0.75rem; color: #888; font-family: monospace; margin-top: 2px; }
 
@@ -66,10 +66,10 @@
             padding: 0 15px; font-size: 0.8rem; z-index: 90; flex-shrink: 0;
         }
         
-        .weather-block { display: flex; align-items: center; gap: 10px; cursor: pointer; max-width: 60%; }
+        .weather-block { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .weather-icon-box { font-size: 1.5rem; display: flex; align-items: center; justify-content: center; width: 30px;}
         .weather-details { display: flex; flex-direction: column; justify-content: center; line-height: 1.1; }
-        .w-top { font-weight: 700; color: #fff; display: flex; gap: 5px; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .w-top { font-weight: 700; color: #fff; display: flex; gap: 5px; align-items: center; }
         .w-edit { border-bottom: 1px dotted #555; }
         .w-update { font-size: 0.6rem; color: #666; font-family: monospace; }
         
@@ -94,11 +94,17 @@
         }
         .battery-text { font-family: 'JetBrains Mono', monospace; color: #fff; font-weight: 700; font-size: 0.75rem;}
 
-        /* PORTAL */
-        .portal { flex: 1; width: 100%; background: #000; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; display: block; }
+        /* PORTAL & IFRAME */
+        .portal { 
+            flex: 1; width: 100vw; 
+            background: #000; position: relative; overflow: hidden;
+        }
+        iframe { 
+            width: 100%; height: 100%; border: none; display: block; 
+            min-width: 100vw; 
+        }
 
-        /* OVERLAY GLOBAL */
+        /* OVERLAYS */
         .overlay-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
@@ -106,7 +112,7 @@
         }
         .overlay-backdrop.active { visibility: visible; opacity: 1; pointer-events: all; }
 
-        /* MENUS & POPUPS (Responsive Logic) */
+        /* MENUS RESPONSIVE */
         .popup-menu {
             position: absolute; background: rgba(18, 18, 18, 0.98); 
             border: 1px solid var(--border); padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
@@ -115,16 +121,10 @@
             opacity: 0; visibility: hidden;
         }
         
-        /* DESKTOP/TABLET STYLE */
         @media (min-width: 600px) {
-            .popup-menu {
-                width: 300px; border-radius: 18px; top: 80px; right: 20px;
-                transform: scale(0.95); transform-origin: top right;
-            }
+            .popup-menu { width: 300px; border-radius: 18px; top: 80px; right: 20px; transform: scale(0.95); transform-origin: top right; }
             .popup-menu.open { transform: scale(1); opacity: 1; visibility: visible; }
         }
-
-        /* MOBILE STYLE (BOTTOM SHEET) */
         @media (max-width: 599px) {
             .popup-menu {
                 width: 100%; bottom: 0; left: 0; border-radius: 24px 24px 0 0;
@@ -169,17 +169,18 @@
         .date-input { width: 100%; background: #0a0a0a; border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color-scheme: dark; box-sizing: border-box;}
         .reset-info { font-size: 0.75rem; color: #888; text-align: center; margin-bottom: 20px; font-weight: 500;}
 
+        /* INPUT VILLE */
         .city-input-group { display: flex; gap: 10px; height: 44px; }
         .city-input { 
             flex: 1; background: #0a0a0a; border: 1px solid var(--border); color: #fff; 
             padding: 0 12px; border-radius: 10px; font-size: 0.9rem; box-sizing: border-box; outline: none; height: 100%;
         }
         .btn-ok { 
-            background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 0 20px; 
-            border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; height: 100%;
+            background: var(--accent); color: #000; border: none; padding: 0 20px; 
+            border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; height: 100%;
             display: flex; align-items: center; font-size: 0.85rem;
         }
-        .btn-ok:active { background: rgba(255, 173, 0, 0.1); transform: scale(0.95); }
+        .btn-ok:active { transform: scale(0.95); }
 
         .switch-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 15px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border);}
         .switch-label { color: #fff; font-size: 0.9rem; font-weight: 600; }
@@ -290,7 +291,7 @@
         <div class="control-row">
             <label class="control-label">Ville Météo (Solaire)</label>
             <div class="city-input-group">
-                <input type="text" id="cityInput" class="city-input" placeholder="ex: Willems" onkeyup="searchCity(this.value)">
+                <input type="text" id="cityInput" class="city-input" placeholder="ex: Willems" spellcheck="false" autocomplete="off" onkeyup="searchCity(this.value)">
                 <button class="btn-ok" id="btnCity" onclick="saveCity()">OK</button>
                 <div id="searchResults"></div>
             </div>
@@ -354,7 +355,7 @@
         document.getElementById('localIpInput').value = savedIp;
         document.getElementById('localLink').href = "http://" + savedIp;
         
-        // SVG ICONS DATA
+        // SVG ICONS
         const svgs = {
             sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>',
             cloud: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>',
@@ -364,7 +365,7 @@
 
         syncDateInput();
 
-        // GESTION MENUS UNIFIÉE (MOBILE & DESKTOP)
+        // GESTION MENUS
         function toggleBattMenu() {
             if(document.getElementById('battMenu').classList.contains('open')) closeAll();
             else { closeAll(); document.getElementById('battMenu').classList.add('open'); showBackdrop(); }
@@ -380,9 +381,7 @@
                 showBackdrop(); updateMarket(); 
             }
         }
-        
         function showBackdrop() { document.getElementById('backdrop').classList.add('active'); }
-        
         function closeAll() {
             document.querySelectorAll('.popup-menu').forEach(el => el.classList.remove('open'));
             document.getElementById('backdrop').classList.remove('active');
@@ -398,7 +397,7 @@
 
         function saveIp(val) { localStorage.setItem('local_ip', val); document.getElementById('localLink').href = "http://" + val; }
 
-        // --- BATTERY ---
+        // --- BATTERY (CALIBRÉE V60) ---
         function getLocalISOString(ts) {
             const d = new Date(ts);
             const pad = (n) => n < 10 ? '0' + n : n;
@@ -415,8 +414,8 @@
             const uptimeHours = diffMs / (1000*60*60);
             document.getElementById('uptimeHours').innerText = uptimeHours.toFixed(1);
 
-            let drain = 8.0; // BASE 8% (Wifi) V57 logic
-            if(isScreenOn) drain += 4.0; 
+            let drain = 8.0; // BASE 8% (Wifi)
+            if(isScreenOn) drain += 4.0; // ECRAN 4% (Total 12%)
             let gain = 0;
             if(currentIsDay) {
                 if(currentCode <= 1) gain = 3.0; 
