@@ -15,15 +15,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     
     <style>
-        /* --- DESIGN SYSTEM V70 --- */
+        /* --- DESIGN SYSTEM MOBILE --- */
         :root {
             --bg: #000000;
             --accent: #FFAD00;
             --power: #32ADE6;
             --btn-grad: linear-gradient(135deg, #FFAD00, #ff8c00);
             --border: rgba(255, 255, 255, 0.15);
-            --header-height: 54px;
-            --info-height: 50px;
+            --header-height: 60px; /* Increased height */
+            --info-height: 55px; /* Increased height */
             --safe-top: env(safe-area-inset-top);
             --safe-bottom: env(safe-area-inset-bottom);
         }
@@ -33,6 +33,7 @@
             margin: 0; height: 100vh;
             display: flex; flex-direction: column;
             overflow: hidden; font-family: 'Inter', sans-serif; color: #fff;
+            font-size: 16px; /* Larger base font for mobile */
         }
 
         /* HEADER */
@@ -44,56 +45,56 @@
             padding: var(--safe-top) 15px 0 15px; z-index: 100; flex-shrink: 0;
         }
         .brand-group { display: flex; flex-direction: column; }
-        .brand h1 { font-size: 1.2rem; margin: 0; font-weight: 900; letter-spacing: -0.5px; }
+        .brand h1 { font-size: 1.4rem; margin: 0; font-weight: 900; letter-spacing: -0.5px; } /* Larger title */
         .brand span { color: var(--accent); }
-        .btc-ticker { font-size: 0.75rem; color: #888; font-family: monospace; margin-top: 2px; }
+        .btc-ticker { font-size: 0.85rem; color: #888; font-family: monospace; margin-top: 4px; } /* Larger ticker */
 
-        .header-actions { display: flex; gap: 8px; }
+        .header-actions { display: flex; gap: 10px; } /* Increased gap */
 
         .btn-icon {
             background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-            color: #fff; width: 36px; height: 36px; border-radius: 10px;
+            color: #fff; width: 40px; height: 40px; border-radius: 10px; /* Larger icon size */
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.2s; padding: 0;
         }
         .btn-icon:active { background: var(--accent); border-color: var(--accent); color: #000; transform: scale(0.95); }
-        .btn-icon svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; pointer-events: none; }
+        .btn-icon svg { width: 24px; height: 24px; stroke: currentColor; stroke-width: 2; fill: none; pointer-events: none; } /* Larger icons */
 
         /* BARRE INFO */
         .info-bar {
             height: var(--info-height);
             background: #050505; border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 15px; font-size: 0.8rem; z-index: 90; flex-shrink: 0;
+            padding: 0 15px; font-size: 0.9rem; z-index: 90; flex-shrink: 0; /* Larger text */
         }
         
         .weather-block { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .weather-icon-box { font-size: 1.5rem; display: flex; align-items: center; justify-content: center; width: 30px;}
-        .weather-details { display: flex; flex-direction: column; justify-content: center; line-height: 1.1; }
-        .w-top { font-weight: 700; color: #fff; display: flex; gap: 5px; align-items: center; }
+        .weather-icon-box { font-size: 1.8rem; display: flex; align-items: center; justify-content: center; width: 36px;} /* Larger icon */
+        .weather-details { display: flex; flex-direction: column; justify-content: center; line-height: 1.2; }
+        .w-top { font-weight: 700; color: #fff; display: flex; gap: 6px; align-items: center; font-size: 1rem;} /* Larger text */
         .w-edit { border-bottom: 1px dotted #555; }
-        .w-update { font-size: 0.6rem; color: #666; font-family: monospace; }
+        .w-update { font-size: 0.7rem; color: #666; font-family: monospace; } /* Larger text */
         
         .battery-group { 
-            display: flex; align-items: center; gap: 8px; cursor: pointer; 
-            padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.05);
+            display: flex; align-items: center; gap: 10px; cursor: pointer; /* Increased gap */
+            padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.05); /* Larger padding and radius */
             border: 1px solid transparent; transition: 0.2s;
         }
         .battery-group:active { background: rgba(255,255,255,0.1); border-color: var(--border); }
         
         .battery-icon {
-            width: 26px; height: 13px; border: 1px solid #aaa; border-radius: 3px;
-            position: relative; padding: 1px; display: flex; align-items: center;
+            width: 32px; height: 16px; border: 2px solid #aaa; border-radius: 4px; /* Larger battery icon */
+            position: relative; padding: 2px; display: flex; align-items: center;
         }
         .battery-icon::after {
-            content: ''; position: absolute; right: -4px; top: 3px;
-            width: 2px; height: 7px; background: #aaa; border-radius: 0 2px 2px 0;
+            content: ''; position: absolute; right: -5px; top: 3px;
+            width: 3px; height: 8px; background: #aaa; border-radius: 0 2px 2px 0; /* Larger nub */
         }
         .battery-level {
             height: 100%; width: 50%; background: var(--accent);
-            border-radius: 1px; transition: width 1s, background 0.5s;
+            border-radius: 2px; transition: width 1s, background 0.5s;
         }
-        .battery-text { font-family: 'JetBrains Mono', monospace; color: #fff; font-weight: 700; font-size: 0.75rem;}
+        .battery-text { font-family: 'JetBrains Mono', monospace; color: #fff; font-weight: 700; font-size: 0.85rem;} /* Larger text */
 
         /* Mode Secteur Actif */
         .mains-mode .battery-level { background: var(--power) !important; width: 100% !important; }
@@ -113,45 +114,48 @@
         }
         .overlay-backdrop.active { visibility: visible; opacity: 1; pointer-events: all; }
 
-        /* MENUS RESPONSIVE */
+        /* MENUS RESPONSIVE - Optimized for Mobile */
         .popup-menu {
             position: absolute; background: rgba(18, 18, 18, 0.98); 
-            border: 1px solid var(--border); padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            border: 1px solid var(--border); padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.9); /* More padding */
             z-index: 200; box-sizing: border-box; 
             transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
             opacity: 0; visibility: hidden;
+            width: 90%; /* Wider menu on mobile */
+            max-width: 400px; /* Max width */
         }
+        
         @media (min-width: 600px) {
-            .popup-menu { width: 300px; border-radius: 18px; top: 80px; right: 20px; transform: scale(0.95); transform-origin: top right; }
+            .popup-menu { width: 350px; border-radius: 18px; top: 80px; right: 20px; transform: scale(0.95); transform-origin: top right; } /* Larger width for tablet */
             .popup-menu.open { transform: scale(1); opacity: 1; visibility: visible; }
         }
         @media (max-width: 599px) {
             .popup-menu {
                 width: 100%; bottom: 0; left: 0; border-radius: 24px 24px 0 0;
                 border-bottom: none; border-left: none; border-right: none;
-                transform: translateY(100%); padding-bottom: calc(20px + var(--safe-bottom));
+                transform: translateY(100%); padding-bottom: calc(25px + var(--safe-bottom)); /* More padding */
             }
             .popup-menu.open { transform: translateY(0); opacity: 1; visibility: visible; }
         }
         
-        .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-        .menu-main-title { color: #fff; font-weight: 800; font-size: 1rem; margin: 0; }
+        .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; } /* More spacing */
+        .menu-main-title { color: #fff; font-weight: 800; font-size: 1.2rem; margin: 0; } /* Larger title */
         
         .popup-close { 
-            background: none; border: none; color: #888; width: 32px; height: 32px; 
+            background: none; border: none; color: #888; width: 36px; height: 36px; /* Larger button */
             cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;
             border-radius: 50%; transition: 0.2s;
         }
         .popup-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
-        .popup-close svg { width: 24px; height: 24px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; pointer-events: none;}
+        .popup-close svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; pointer-events: none;} /* Larger icon */
 
-        .control-row { margin-bottom: 15px; position: relative; }
-        .control-label { display: block; color: #aaa; font-size: 0.75rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .control-row { margin-bottom: 20px; position: relative; } /* More spacing */
+        .control-label { display: block; color: #aaa; font-size: 0.85rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; } /* Larger label */
         
-        /* BOUTONS */
+        /* BOUTONS - Optimized for Mobile */
         .btn-standard {
             width: 100%; background: var(--btn-grad); color: #FFFFFF; border: none; 
-            padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.85rem;
+            padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; /* Larger size */
             box-shadow: 0 4px 15px rgba(255, 173, 0, 0.3); transition: 0.2s; 
             display: flex; justify-content: center; align-items: center; text-decoration: none;
             text-transform: uppercase; letter-spacing: 0.5px; box-sizing: border-box;
@@ -160,51 +164,51 @@
         
         .btn-dark {
             width: 100%; background: #222; border: 1px solid #444; color: #fff; 
-            padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.85rem;
-            text-decoration: none; display: flex; justify-content: center; align-items: center;
+            padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; /* Larger size */
+            text-decoration: none; display: flex; justify-content center; align-items: center;
             text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s; box-sizing: border-box;
         }
         .btn-dark:active { background: #333; transform: scale(0.98); }
 
         .btn-learn {
             width: 100%; background: rgba(50, 215, 75, 0.1); border: 1px solid #32d74b; color: #32d74b;
-            padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.8rem;
-            transition: 0.2s; margin-top: 5px;
+            padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.9rem; /* Larger size */
+            transition: 0.2s; margin-top: 8px; /* More margin */
         }
         .btn-learn:active { background: rgba(50, 215, 75, 0.2); }
 
-        .date-input { width: 100%; background: #0a0a0a; border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color-scheme: dark; box-sizing: border-box;}
-        .reset-info { font-size: 0.75rem; color: #888; text-align: center; margin-bottom: 20px; font-weight: 500;}
+        .date-input { width: 100%; background: #0a0a0a; border: 1px solid var(--border); color: #fff; padding: 14px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 1rem; color-scheme: dark; box-sizing: border-box;} /* Larger input */
+        .reset-info { font-size: 0.85rem; color: #888; text-align: center; margin-bottom: 25px; font-weight: 500;} /* Larger text and margin */
 
-        /* INPUT VILLE & OK */
-        .city-input-group { display: flex; gap: 10px; height: 44px; }
+        /* INPUT VILLE & OK - Optimized for Mobile */
+        .city-input-group { display: flex; gap: 12px; height: 48px; } /* Larger height and gap */
         .city-input { 
             flex: 1; background: #0a0a0a; border: 1px solid var(--border); color: #fff; 
-            padding: 0 12px; border-radius: 10px; font-size: 0.9rem; box-sizing: border-box; outline: none; height: 100%;
+            padding: 0 14px; border-radius: 10px; font-size: 1rem; box-sizing: border-box; outline: none; height: 100%; /* Larger input */
         }
         .btn-ok { 
-            background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 0 20px; 
+            background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 0 24px; 
             border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; height: 100%;
-            display: flex; align-items: center; font-size: 0.85rem;
+            display: flex; align-items: center; font-size: 0.95rem; /* Larger button */
         }
         .btn-ok:hover { background: rgba(255, 173, 0, 0.1); }
         .btn-ok:active { transform: scale(0.95); background: rgba(255, 173, 0, 0.2); }
 
-        /* SWITCHS */
-        .switch-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 15px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); margin-bottom: 10px;}
-        .switch-label { color: #fff; font-size: 0.9rem; font-weight: 600; }
-        .toggle-btn { background: #333; width: 44px; height: 24px; border-radius: 12px; position: relative; transition: 0.3s; border: 1px solid #444;}
-        .toggle-btn::after { content:''; position: absolute; left: 2px; top: 2px; width: 18px; height: 18px; background: #aaa; border-radius: 50%; transition: 0.3s; }
+        /* SWITCHS - Optimized for Mobile */
+        .switch-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px 18px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); margin-bottom: 12px;} /* Larger padding and margin */
+        .switch-label { color: #fff; font-size: 1rem; font-weight: 600; } /* Larger label */
+        .toggle-btn { background: #333; width: 50px; height: 28px; border-radius: 14px; position: relative; transition: 0.3s; border: 1px solid #444;} /* Larger switch */
+        .toggle-btn::after { content:''; position: absolute; left: 2px; top: 2px; width: 22px; height: 22px; background: #aaa; border-radius: 50%; transition: 0.3s; } /* Larger knob */
         .toggle-btn.on { background: var(--accent); border-color: var(--accent); }
-        .toggle-btn.on::after { left: 22px; background: #fff; }
+        .toggle-btn.on::after { left: 26px; background: #fff; }
         /* BLUE TOGGLE */
         .toggle-btn.blue-on.on { background: var(--power); border-color: var(--power); }
         
-        input[type=range] { width: 100%; accent-color: var(--accent); cursor: grab; margin-top: 5px;}
+        input[type=range] { width: 100%; accent-color: var(--accent); cursor: grab; margin-top: 8px; height: 10px;} /* Larger slider */
 
-        .widget { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
-        .w-title { font-size: 0.7rem; color: #888; text-transform: uppercase; }
-        .w-val { font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: 2px; }
+        .widget { background: rgba(255,255,255,0.03); padding: 18px; border-radius: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); } /* More padding and margin */
+        .w-title { font-size: 0.8rem; color: #888; text-transform: uppercase; } /* Larger title */
+        .w-val { font-size: 1.6rem; font-weight: 700; color: #fff; margin-top: 4px; } /* Larger value */
         .w-accent { color: var(--accent); text-shadow: 0 0 20px rgba(255, 173, 0, 0.15); }
         
         .spin { animation: spin 1s linear infinite; }
@@ -218,28 +222,26 @@
             max-height: 150px; overflow-y: auto; z-index: 210;
             display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .search-item { padding: 12px; border-bottom: 1px solid #2a2a2a; font-size: 0.9rem; cursor: pointer; }
+        .search-item { padding: 15px; border-bottom: 1px solid #2a2a2a; font-size: 1rem; cursor: pointer; } /* Larger item */
         .search-item:hover { background: #2a2a2a; color: var(--accent); }
         
-        .learn-box { border: 1px dashed #333; padding: 15px; border-radius: 12px; margin-top: 20px; background: rgba(255,255,255,0.02);}
-        .learn-title { color: #32d74b; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px;}
+        .learn-box { border: 1px dashed #333; padding: 18px; border-radius: 12px; margin-top: 25px; background: rgba(255,255,255,0.02);} /* More padding and margin */
+        .learn-title { color: #32d74b; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; margin-bottom: 12px;} /* Larger title */
 
         #toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: rgba(50, 215, 75, 0.9); color: #000; font-weight: bold;
-            padding: 12px 24px; border-radius: 50px; font-size: 0.85rem;
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: rgba(50, 215, 75, 0.95); color: #000; font-weight: bold;
+            padding: 14px 28px; border-radius: 50px; font-size: 0.95rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 300;
             opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: none;
         }
-        #toast.show { opacity: 1; visibility: visible; bottom: 40px; }
+        #toast.show { opacity: 1; visibility: visible; bottom: 50px; }
     </style>
 </head>
 <body>
 
     <div id="backdrop" class="overlay-backdrop" onclick="closeAll()"></div>
-    <div id="toast">⚡ RETOUR SIGNAL : BATTERIE 100%</div>
-
-    <header>
+    <div id="toast">Signal de retour: Batterie 100%</div> <header>
         <div class="brand-group">
             <div class="brand"><h1>NERD<span>MINER</span></h1></div>
             <div class="btc-ticker" id="headerPrice">$...</div>
@@ -291,16 +293,14 @@
             <input type="text" id="localIpInput" class="city-input" value="192.168.1.49" onchange="saveIp('local_ip', this.value)">
         </div>
         <a id="localLink" href="http://192.168.1.49" target="_blank" class="btn-dark" style="margin-bottom:20px;">
-            OUVRIR NERDMINER ⛏️
-        </a>
+            OUVRIR NERDMINER </a>
 
         <div class="control-row">
             <label class="control-label">IP ULANZI (AWTRIX)</label>
             <input type="text" id="ulanziIpInput" class="city-input" value="192.168.1.198" onchange="saveIp('ulanzi_ip', this.value)">
         </div>
         <a id="ulanziLink" href="http://192.168.1.198" target="_blank" class="btn-dark">
-            OUVRIR ULANZI 👾
-        </a>
+            OUVRIR ULANZI </a>
     </div>
 
     <div id="battMenu" class="popup-menu">
@@ -317,8 +317,7 @@
         
         <div class="control-row">
             <div class="switch-row" onclick="toggleMains()">
-                <span class="switch-label">⚡ Branché sur Secteur</span>
-                <div id="mainsToggle" class="toggle-btn blue-on"></div>
+                <span class="switch-label">Branché sur Secteur</span> <div id="mainsToggle" class="toggle-btn blue-on"></div>
             </div>
         </div>
 
@@ -329,8 +328,7 @@
         <div class="reset-info">Autonomie estimée : <span id="uptimeHours" style="color:#fff; font-weight:700;">0</span>h</div>
         
         <div class="learn-box">
-            <div class="learn-title">🧠 Apprentissage IA</div>
-            <label class="control-label">Si coupure, à quelle heure ?</label>
+            <div class="learn-title">Apprentissage IA</div> <label class="control-label">Si coupure, à quelle heure ?</label>
             <input type="datetime-local" id="deathInput" class="date-input">
             <button class="btn-learn" onclick="learnFromDeath()">CALCULER & MÉMORISER</button>
         </div>
