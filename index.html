@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     
     <style>
-        /* --- DESIGN SYSTEM V73 (COMPACT) --- */
+        /* --- DESIGN SYSTEM V74 --- */
         :root {
             --bg: #000000;
             --accent: #FFAD00;
@@ -119,7 +119,7 @@
         /* MENUS RESPONSIVE */
         .popup-menu {
             position: absolute; background: rgba(18, 18, 18, 0.98); 
-            border: 1px solid var(--border); padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            border: 1px solid var(--border); padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.9);
             z-index: 200; box-sizing: border-box; 
             transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
             opacity: 0; visibility: hidden;
@@ -132,12 +132,12 @@
             .popup-menu {
                 width: 100%; bottom: 0; left: 0; border-radius: 20px 20px 0 0;
                 border-bottom: none; border-left: none; border-right: none;
-                transform: translateY(100%); padding-bottom: calc(20px + var(--safe-bottom));
+                transform: translateY(100%); padding-bottom: calc(25px + var(--safe-bottom));
             }
             .popup-menu.open { transform: translateY(0); opacity: 1; visibility: visible; }
         }
         
-        .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
         .menu-main-title { color: #fff; font-weight: 800; font-size: 0.95rem; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;}
         
         .popup-close { 
@@ -154,10 +154,12 @@
         /* BOUTONS COMPACTS */
         .btn-standard {
             width: 100%; background: var(--btn-grad); color: #FFFFFF; border: none; 
-            padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem;
+            padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.9rem;
             box-shadow: 0 3px 10px rgba(255, 173, 0, 0.2); transition: 0.2s; 
             display: flex; justify-content: center; align-items: center; text-decoration: none;
             text-transform: uppercase; letter-spacing: 0.5px; box-sizing: border-box;
+            /* AJOUT ESPACE ICI */
+            margin-bottom: 20px; 
         }
         .btn-standard:active { transform: scale(0.98); opacity: 0.9; }
         
@@ -187,7 +189,7 @@
         .btn-ok:active { transform: scale(0.95); background: rgba(255, 173, 0, 0.2); }
 
         /* SWITCHS */
-        .switch-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); margin-bottom: 8px;}
+        .switch-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 10px; cursor: pointer; border: 1px solid var(--border); margin-bottom: 12px;}
         .switch-label { color: #fff; font-size: 0.85rem; font-weight: 600; }
         .toggle-btn { background: #333; width: 40px; height: 22px; border-radius: 11px; position: relative; transition: 0.3s; border: 1px solid #444;}
         .toggle-btn::after { content:''; position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; background: #aaa; border-radius: 50%; transition: 0.3s; }
@@ -236,7 +238,7 @@
             opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: none; white-space: nowrap;
         }
         #toast.show { opacity: 1; visibility: visible; bottom: 40px; }
-        #toast.alert { background: var(--danger); color: #fff; } /* Style rouge pour alerte batterie */
+        #toast.alert { background: var(--danger); color: #fff; }
     </style>
 </head>
 <body>
@@ -299,388 +301,4 @@
             OUVRIR NERDMINER
         </a>
 
-        <div class="control-row">
-            <label class="control-label">IP ULANZI</label>
-            <input type="text" id="ulanziIpInput" class="city-input" value="192.168.1.198" onchange="saveIp('ulanzi_ip', this.value)">
-        </div>
-        <a id="ulanziLink" href="http://192.168.1.198" target="_blank" class="btn-dark">
-            OUVRIR ULANZI
-        </a>
-    </div>
-
-    <div id="battMenu" class="popup-menu">
-        <div class="popup-header">
-            <div class="menu-main-title">Gestion Énergie</div>
-            <button class="popup-close" onclick="closeAll()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
-        </div>
-        
-        <button class="btn-standard" onclick="resetBattery()">
-            JE VIENS DE RECHARGER
-        </button>
-        
-        <div class="control-row">
-            <div class="switch-row" onclick="toggleMains()">
-                <span class="switch-label">Branché sur Secteur</span>
-                <div id="mainsToggle" class="toggle-btn blue-on"></div>
-            </div>
-        </div>
-
-        <div class="control-row">
-            <label class="control-label">Ou corriger heure recharge</label>
-            <input type="datetime-local" id="chargeInput" class="date-input" onchange="updateChargeTime(this.value)">
-        </div>
-        <div class="reset-info">Autonomie estimée : <span id="uptimeHours" style="color:#fff; font-weight:700;">0</span>h</div>
-
-        <div class="control-row" style="margin-top:20px;">
-            <label class="control-label">Ville Météo</label>
-            <div class="city-input-group">
-                <input type="text" id="cityInput" class="city-input" placeholder="ex: Willems" spellcheck="false" autocomplete="off" onkeyup="searchCity(this.value)">
-                <button class="btn-ok" id="btnCity" onclick="saveCity()">OK</button>
-                <div id="searchResults"></div>
-            </div>
-        </div>
-
-        <div class="control-row">
-            <div class="switch-row" onclick="toggleScreen()">
-                <span class="switch-label">Écran (LED) Allumé</span>
-                <div id="screenToggle" class="toggle-btn"></div>
-            </div>
-        </div>
-        
-        <div class="control-row">
-            <label class="control-label">Calibrage</label>
-            <input type="range" id="calibSlider" min="-20" max="20" value="0" oninput="updateOffset(this.value)">
-            <div style="font-size:0.7rem; color:#888; text-align:right; margin-top:2px;">Offset: <span id="offsetVal" style="color:#fff;">+0</span>%</div>
-        </div>
-
-        <div class="sync-box">
-            <div class="control-label">Synchronisation</div>
-            <button class="btn-sync" onclick="exportConfig()">Copier Config</button>
-            <button class="btn-sync" onclick="importConfig()">Coller & Sync</button>
-        </div>
-    </div>
-
-    <div id="drawerMenu" class="popup-menu">
-        <div class="popup-header">
-            <span class="menu-main-title">Market Tools</span>
-            <button class="popup-close" onclick="closeAll()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
-        </div>
-        <div class="widget">
-            <div class="w-title">Jackpot (3.125 BTC)</div>
-            <div class="w-val w-accent" id="jackpotVal">Calcul...</div>
-        </div>
-        <div class="widget">
-            <div class="w-title">Fear & Greed Index</div>
-            <div class="w-val" id="fgVal">--</div>
-        </div>
-        <div class="widget">
-            <div class="w-title">Prochain Halving</div>
-            <div class="w-val">2028</div>
-        </div>
-    </div>
-
-    <script>
-        const myAddress = "bc1pns5myh0qlfl3wyzed4rqy86c6p26fv5z9g0qr7ne74rc3kaa7a4sjn0rlf";
-        const targetUrl = `https://web.public-pool.io/#/app/${myAddress}`;
-        const iframe = document.getElementById('myFrame');
-        iframe.src = targetUrl;
-
-        // INIT
-        let savedCity = localStorage.getItem('user_city') || "Lille";
-        let lastCharge = parseInt(localStorage.getItem('last_charge_ts'));
-        if(!lastCharge || isNaN(lastCharge)) {
-            lastCharge = new Date().getTime();
-            localStorage.setItem('last_charge_ts', lastCharge);
-        }
-        
-        let savedScreenState = localStorage.getItem('user_screen_on');
-        let isScreenOn = (savedScreenState === null) ? false : (savedScreenState === 'true');
-        
-        let savedMains = localStorage.getItem('user_mains_connected');
-        let isMainsConnected = (savedMains === 'true');
-
-        let baseDrain = parseFloat(localStorage.getItem('learned_base_drain')) || 9.0; 
-        
-        let userOffset = 0;
-        let currentCode = 0; let currentIsDay = 1;
-        
-        let savedIpMiner = localStorage.getItem('local_ip') || "192.168.1.49";
-        let savedIpUlanzi = localStorage.getItem('ulanzi_ip') || "192.168.1.198";
-        let currentBatteryLevel = 100;
-        let alertTriggered = false; // Pour ne pas spammer l'alerte
-
-        document.getElementById('cityInput').value = savedCity;
-        document.getElementById('wCity').innerText = savedCity;
-        
-        document.getElementById('localIpInput').value = savedIpMiner;
-        document.getElementById('localLink').href = "http://" + savedIpMiner;
-        document.getElementById('ulanziIpInput').value = savedIpUlanzi;
-        document.getElementById('ulanziLink').href = "http://" + savedIpUlanzi;
-        
-        if(isScreenOn) document.getElementById('screenToggle').classList.add('on');
-        if(isMainsConnected) document.getElementById('mainsToggle').classList.add('on');
-        
-        const svgs = {
-            sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>',
-            cloud: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>',
-            rain: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16" y1="13" x2="16" y2="21"></line><line x1="8" y1="13" x2="8" y2="21"></line><line x1="12" y1="15" x2="12" y2="23"></line><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"></path></svg>',
-            moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>'
-        };
-
-        syncDateInput();
-
-        // GESTION MENUS
-        function toggleBattMenu() {
-            if(document.getElementById('battMenu').classList.contains('open')) closeAll();
-            else { closeAll(); document.getElementById('battMenu').classList.add('open'); showBackdrop(); }
-        }
-        function toggleLocalMenu() {
-            if(document.getElementById('localMenu').classList.contains('open')) closeAll();
-            else { closeAll(); document.getElementById('localMenu').classList.add('open'); showBackdrop(); }
-        }
-        function toggleDrawer() { 
-            if(document.getElementById('drawerMenu').classList.contains('open')) closeAll();
-            else { 
-                closeAll(); document.getElementById('drawerMenu').classList.add('open'); 
-                showBackdrop(); updateMarket(); 
-            }
-        }
-        function showBackdrop() { document.getElementById('backdrop').classList.add('active'); }
-        function closeAll() {
-            document.querySelectorAll('.popup-menu').forEach(el => el.classList.remove('open'));
-            document.getElementById('backdrop').classList.remove('active');
-            document.getElementById('searchResults').style.display = 'none';
-        }
-        function reloadIframe() { 
-            const btn = document.getElementById('refreshBtn');
-            btn.querySelector('svg').classList.add('spin');
-            iframe.src = 'about:blank'; setTimeout(() => iframe.src = targetUrl, 50); 
-            setTimeout(() => btn.querySelector('svg').classList.remove('spin'), 1000); 
-        }
-
-        // SAVE IP GENERIQUE
-        function saveIp(key, val) { 
-            localStorage.setItem(key, val); 
-            if(key === 'local_ip') document.getElementById('localLink').href = "http://" + val;
-            if(key === 'ulanzi_ip') document.getElementById('ulanziLink').href = "http://" + val;
-        }
-
-        function getLocalISOString(ts) {
-            const d = new Date(ts);
-            const pad = (n) => n < 10 ? '0' + n : n;
-            return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
-        }
-        function syncDateInput() { if(lastCharge) document.getElementById('chargeInput').value = getLocalISOString(lastCharge); }
-        function resetBattery() { 
-            lastCharge = new Date().getTime(); 
-            alertTriggered = false; // Reset alerte
-            saveAndCalc(); 
-            alert("Batterie réinitialisée à 100%"); 
-        }
-        function updateChargeTime(val) { if(val) { lastCharge = new Date(val).getTime(); saveAndCalc(); } }
-        function saveAndCalc() { localStorage.setItem('last_charge_ts', lastCharge); syncDateInput(); calcBattery(); }
-
-        function calcBattery() {
-            const now = new Date().getTime();
-            let diffMs = now - lastCharge; if(diffMs<0) diffMs=0;
-            const uptimeHours = diffMs / (1000*60*60);
-            
-            if(isMainsConnected) {
-                document.getElementById('battPct').innerText = "∞";
-                document.getElementById('battBar').style.width = "100%";
-                document.getElementById('uptimeHours').innerText = "Illimitée";
-                document.getElementById('batteryDisplay').classList.add('mains-mode');
-                
-                let theoreticalLevel = 100 - (uptimeHours * (baseDrain + (isScreenOn?3.0:0))); 
-                if(theoreticalLevel <= 0) { lastCharge = new Date().getTime(); }
-                return;
-            } else {
-                document.getElementById('batteryDisplay').classList.remove('mains-mode');
-                document.getElementById('uptimeHours').innerText = uptimeHours.toFixed(1);
-            }
-
-            let drain = baseDrain; 
-            if(isScreenOn) drain += 3.0; 
-            
-            let gain = 0;
-            if(currentIsDay) {
-                if(currentCode <= 1) gain = 3.0; 
-                else if(currentCode <= 3) gain = 0.5; 
-            }
-            let finalDrain = drain - gain; if(finalDrain<0) finalDrain=0;
-            
-            let level = 100 - (uptimeHours * finalDrain);
-            level += userOffset;
-            if(level>100) level=100; if(level<0) level=0;
-            
-            currentBatteryLevel = level;
-            level = Math.round(level);
-            
-            // --- LOGIQUE ALERTE ---
-            if(level <= 15 && !alertTriggered && level > 0) {
-                showToast("Batterie Faible (" + level + "%) !", true);
-                alertTriggered = true; // On ne le montre qu'une fois
-            }
-            
-            document.getElementById('battPct').innerText = level + "%";
-            document.getElementById('battBar').style.width = level + "%";
-            const bar = document.getElementById('battBar');
-            if(level > 60) bar.style.background = "#32d74b"; else if(level > 20) bar.style.background = "#FFAD00"; else bar.style.background = "#ff453a";
-        }
-        function updateOffset(val) { userOffset = parseInt(val); calcBattery(); }
-
-        function toggleScreen() { 
-            isScreenOn = !isScreenOn; 
-            localStorage.setItem('user_screen_on', isScreenOn); 
-            const btn = document.getElementById('screenToggle');
-            if(isScreenOn) btn.classList.add('on'); else btn.classList.remove('on');
-            calcBattery(); 
-        }
-        function toggleMains() {
-            isMainsConnected = !isMainsConnected;
-            localStorage.setItem('user_mains_connected', isMainsConnected);
-            const btn = document.getElementById('mainsToggle');
-            if(isMainsConnected) btn.classList.add('on'); else btn.classList.remove('on');
-            calcBattery();
-        }
-
-        // --- SYSTEME SYNC ---
-        function exportConfig() {
-            const data = {
-                ts: lastCharge,
-                screen: isScreenOn,
-                mains: isMainsConnected,
-                city: savedCity
-            };
-            const str = JSON.stringify(data);
-            navigator.clipboard.writeText(str).then(() => {
-                showToast("Config copiée ! Colle-la sur l'autre appareil.");
-            });
-        }
-
-        async function importConfig() {
-            try {
-                const text = await navigator.clipboard.readText();
-                const data = JSON.parse(text);
-                
-                if(data.ts) {
-                    lastCharge = data.ts;
-                    localStorage.setItem('last_charge_ts', lastCharge);
-                }
-                if(typeof data.screen !== 'undefined') {
-                    isScreenOn = data.screen;
-                    localStorage.setItem('user_screen_on', isScreenOn);
-                    const btn = document.getElementById('screenToggle');
-                    if(isScreenOn) btn.classList.add('on'); else btn.classList.remove('on');
-                }
-                if(typeof data.mains !== 'undefined') {
-                    isMainsConnected = data.mains;
-                    localStorage.setItem('user_mains_connected', isMainsConnected);
-                    const btn = document.getElementById('mainsToggle');
-                    if(isMainsConnected) btn.classList.add('on'); else btn.classList.remove('on');
-                }
-                
-                syncDateInput();
-                calcBattery();
-                showToast("Config synchronisée !");
-                setTimeout(() => location.reload(), 1000); // Reload pour être sûr
-                
-            } catch(e) {
-                showToast("Erreur : Copie d'abord la config !");
-            }
-        }
-
-        function smartRefresh() {
-            const btn = document.getElementById('refreshBtn');
-            btn.querySelector('svg').classList.add('spin');
-            iframe.src = 'about:blank'; 
-            setTimeout(() => iframe.src = targetUrl, 50); 
-            setTimeout(() => btn.querySelector('svg').classList.remove('spin'), 1000); 
-            
-            if(!isMainsConnected && currentBatteryLevel <= 0) {
-                resetBattery();
-                showToast("Signal de retour : Batterie 100%");
-            }
-        }
-        
-        function showToast(msg, isAlert = false) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            if(isAlert) t.classList.add('alert'); else t.classList.remove('alert');
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
-
-        let searchTimeout;
-        async function searchCity(query) {
-            const resultsBox = document.getElementById('searchResults');
-            if(query.length < 3) { resultsBox.style.display = 'none'; return; }
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(async () => {
-                try {
-                    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=5&language=fr&format=json`);
-                    const data = await res.json();
-                    if(data.results) {
-                        resultsBox.innerHTML = ""; resultsBox.style.display = 'block';
-                        data.results.forEach(city => {
-                            const div = document.createElement('div'); div.className = "search-item";
-                            div.innerText = `${city.name}, ${city.country || ''}`;
-                            div.onclick = () => selectCity(city); resultsBox.appendChild(div);
-                        });
-                    } else resultsBox.style.display = 'none';
-                } catch(e) {}
-            }, 500); 
-        }
-        function selectCity(city) {
-            localStorage.setItem('user_city', city.name); localStorage.setItem('user_lat', city.latitude); localStorage.setItem('user_lon', city.longitude);
-            document.getElementById('wCity').innerText = city.name; document.getElementById('cityInput').value = city.name;
-            document.getElementById('searchResults').style.display = 'none'; fetchMeteo(city.latitude, city.longitude);
-        }
-        async function saveCity() { const city = document.getElementById('cityInput').value; searchCity(city); }
-
-        async function fetchMeteo(lat, lon) {
-            try {
-                document.getElementById('wIcon').classList.add('blink');
-                const ts = new Date().getTime();
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&_t=${ts}`);
-                const data = await res.json();
-                const w = data.current_weather;
-                currentCode = w.weathercode; currentIsDay = w.is_day;
-                let svg = svgs.moon;
-                if(w.is_day) {
-                    if(w.weathercode <= 1) svg = svgs.sun;
-                    else if(w.weathercode <= 3) svg = svgs.cloud;
-                    else svg = svgs.rain;
-                }
-                document.getElementById('wIcon').innerHTML = svg;
-                document.getElementById('wTemp').innerText = Math.round(w.temperature) + "°";
-                const now = new Date();
-                document.getElementById('wUpdate').innerText = "MAJ " + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
-                calcBattery();
-            } catch(e) {}
-        }
-        function updateWeather() { let lat = localStorage.getItem('user_lat') || 50.6292; let lon = localStorage.getItem('user_lon') || 3.0573; fetchMeteo(lat, lon); }
-
-        async function updateMarket() {
-            try {
-                const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
-                const data = await res.json();
-                const price = parseFloat(data.price);
-                document.getElementById('headerPrice').innerText = "$" + price.toLocaleString('en-US', {maximumFractionDigits:0});
-                document.getElementById('jackpotVal').innerText = "$" + (price * 3.125).toLocaleString('en-US', {maximumFractionDigits:0});
-                const resFg = await fetch('https://api.alternative.me/fng/'); const dFg = await resFg.json();
-                document.getElementById('fgVal').innerText = dFg.data[0].value + "/100";
-            } catch(e) {}
-        }
-
-        // START
-        updateWeather(); updateMarket(); calcBattery();
-        setInterval(calcBattery, 60000); setInterval(updateWeather, 600000); setInterval(updateMarket, 30000);
-
-    </script>
-</body>
-</html>
+        <div class="
