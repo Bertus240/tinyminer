@@ -15,11 +15,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     
     <style>
-        /* --- DESIGN SYSTEM V72 --- */
+        /* --- DESIGN SYSTEM V73 (COMPACT) --- */
         :root {
             --bg: #000000;
             --accent: #FFAD00;
             --power: #32ADE6;
+            --danger: #ff453a;
             --btn-grad: linear-gradient(135deg, #FFAD00, #ff8c00);
             --border: rgba(255, 255, 255, 0.15);
             --header-height: 50px;
@@ -31,7 +32,6 @@
         body {
             background-color: var(--bg);
             margin: 0; 
-            /* Fix pour mobile : utilise dvh (dynamic viewport height) */
             height: 100dvh; 
             display: flex; flex-direction: column;
             overflow: hidden; font-family: 'Inter', sans-serif; color: #fff;
@@ -104,20 +104,9 @@
         .mains-mode .battery-icon::after { background: var(--power); }
         .mains-mode .battery-text { color: var(--power); }
 
-        /* PORTAL & IFRAME (Optimisé) */
-        .portal { 
-            flex: 1; 
-            width: 100%; 
-            background: #000; 
-            position: relative; 
-            overflow: hidden; /* Empêche le double scroll */
-        }
-        iframe { 
-            width: 100%; 
-            height: 100%; 
-            border: none; 
-            display: block; 
-        }
+        /* PORTAL & IFRAME */
+        .portal { flex: 1; width: 100%; background: #000; position: relative; overflow: hidden; }
+        iframe { width: 100%; height: 100%; border: none; display: block; }
 
         /* OVERLAYS */
         .overlay-backdrop {
@@ -135,7 +124,6 @@
             transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
             opacity: 0; visibility: hidden;
         }
-        
         @media (min-width: 600px) {
             .popup-menu { width: 300px; border-radius: 18px; top: 80px; right: 20px; transform: scale(0.95); transform-origin: top right; }
             .popup-menu.open { transform: scale(1); opacity: 1; visibility: visible; }
@@ -180,13 +168,6 @@
             text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s; box-sizing: border-box;
         }
         .btn-dark:active { background: #333; transform: scale(0.98); }
-
-        .btn-learn {
-            width: 100%; background: rgba(50, 215, 75, 0.1); border: 1px solid #32d74b; color: #32d74b;
-            padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem;
-            transition: 0.2s; margin-top: 5px;
-        }
-        .btn-learn:active { background: rgba(50, 215, 75, 0.2); }
 
         .date-input { width: 100%; background: #0a0a0a; border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color-scheme: dark; box-sizing: border-box;}
         .reset-info { font-size: 0.75rem; color: #888; text-align: center; margin-bottom: 15px; font-weight: 500;}
@@ -236,8 +217,16 @@
         .search-item { padding: 10px; border-bottom: 1px solid #2a2a2a; font-size: 0.85rem; cursor: pointer; }
         .search-item:hover { background: #2a2a2a; color: var(--accent); }
         
-        .learn-box { border: 1px dashed #333; padding: 12px; border-radius: 10px; margin-top: 15px; background: rgba(255,255,255,0.02);}
-        .learn-title { color: #32d74b; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 8px;}
+        /* SYNC & ALERT */
+        .sync-box { 
+            margin-top: 20px; padding: 12px; border: 1px dashed #333; border-radius: 10px; 
+            text-align: center; background: rgba(255,255,255,0.02);
+        }
+        .btn-sync { 
+            background: transparent; color: #888; border: 1px solid #444; 
+            padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; margin: 0 5px;
+        }
+        .btn-sync:hover { color: #fff; border-color: #fff; }
 
         #toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
@@ -247,6 +236,7 @@
             opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: none; white-space: nowrap;
         }
         #toast.show { opacity: 1; visibility: visible; bottom: 40px; }
+        #toast.alert { background: var(--danger); color: #fff; } /* Style rouge pour alerte batterie */
     </style>
 </head>
 <body>
@@ -342,13 +332,6 @@
             <input type="datetime-local" id="chargeInput" class="date-input" onchange="updateChargeTime(this.value)">
         </div>
         <div class="reset-info">Autonomie estimée : <span id="uptimeHours" style="color:#fff; font-weight:700;">0</span>h</div>
-        
-        <div class="learn-box">
-            <div class="learn-title">Apprentissage IA</div>
-            <label class="control-label">Si coupure, à quelle heure ?</label>
-            <input type="datetime-local" id="deathInput" class="date-input">
-            <button class="btn-learn" onclick="learnFromDeath()">CALCULER & MÉMORISER</button>
-        </div>
 
         <div class="control-row" style="margin-top:20px;">
             <label class="control-label">Ville Météo</label>
@@ -370,6 +353,12 @@
             <label class="control-label">Calibrage</label>
             <input type="range" id="calibSlider" min="-20" max="20" value="0" oninput="updateOffset(this.value)">
             <div style="font-size:0.7rem; color:#888; text-align:right; margin-top:2px;">Offset: <span id="offsetVal" style="color:#fff;">+0</span>%</div>
+        </div>
+
+        <div class="sync-box">
+            <div class="control-label">Synchronisation</div>
+            <button class="btn-sync" onclick="exportConfig()">Copier Config</button>
+            <button class="btn-sync" onclick="importConfig()">Coller & Sync</button>
         </div>
     </div>
 
@@ -414,27 +403,24 @@
         let savedMains = localStorage.getItem('user_mains_connected');
         let isMainsConnected = (savedMains === 'true');
 
-        // CALIBRAGE V72 (11h autonomie)
         let baseDrain = parseFloat(localStorage.getItem('learned_base_drain')) || 9.0; 
         
         let userOffset = 0;
         let currentCode = 0; let currentIsDay = 1;
         
-        // RECUPERATION IP MULTI
         let savedIpMiner = localStorage.getItem('local_ip') || "192.168.1.49";
         let savedIpUlanzi = localStorage.getItem('ulanzi_ip') || "192.168.1.198";
-        let currentBatteryLevel = 100; 
+        let currentBatteryLevel = 100;
+        let alertTriggered = false; // Pour ne pas spammer l'alerte
 
         document.getElementById('cityInput').value = savedCity;
         document.getElementById('wCity').innerText = savedCity;
         
-        // INPUTS IP
         document.getElementById('localIpInput').value = savedIpMiner;
         document.getElementById('localLink').href = "http://" + savedIpMiner;
         document.getElementById('ulanziIpInput').value = savedIpUlanzi;
         document.getElementById('ulanziLink').href = "http://" + savedIpUlanzi;
         
-        // UI
         if(isScreenOn) document.getElementById('screenToggle').classList.add('on');
         if(isMainsConnected) document.getElementById('mainsToggle').classList.add('on');
         
@@ -489,7 +475,12 @@
             return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
         }
         function syncDateInput() { if(lastCharge) document.getElementById('chargeInput').value = getLocalISOString(lastCharge); }
-        function resetBattery() { lastCharge = new Date().getTime(); saveAndCalc(); alert("Batterie réinitialisée à 100%"); }
+        function resetBattery() { 
+            lastCharge = new Date().getTime(); 
+            alertTriggered = false; // Reset alerte
+            saveAndCalc(); 
+            alert("Batterie réinitialisée à 100%"); 
+        }
         function updateChargeTime(val) { if(val) { lastCharge = new Date(val).getTime(); saveAndCalc(); } }
         function saveAndCalc() { localStorage.setItem('last_charge_ts', lastCharge); syncDateInput(); calcBattery(); }
 
@@ -505,7 +496,7 @@
                 document.getElementById('batteryDisplay').classList.add('mains-mode');
                 
                 let theoreticalLevel = 100 - (uptimeHours * (baseDrain + (isScreenOn?3.0:0))); 
-                if(theoreticalLevel <= 0) { resetBattery(); }
+                if(theoreticalLevel <= 0) { lastCharge = new Date().getTime(); }
                 return;
             } else {
                 document.getElementById('batteryDisplay').classList.remove('mains-mode');
@@ -513,7 +504,7 @@
             }
 
             let drain = baseDrain; 
-            if(isScreenOn) drain += 3.0; // Correction V72
+            if(isScreenOn) drain += 3.0; 
             
             let gain = 0;
             if(currentIsDay) {
@@ -528,6 +519,12 @@
             
             currentBatteryLevel = level;
             level = Math.round(level);
+            
+            // --- LOGIQUE ALERTE ---
+            if(level <= 15 && !alertTriggered && level > 0) {
+                showToast("Batterie Faible (" + level + "%) !", true);
+                alertTriggered = true; // On ne le montre qu'une fois
+            }
             
             document.getElementById('battPct').innerText = level + "%";
             document.getElementById('battBar').style.width = level + "%";
@@ -551,6 +548,52 @@
             calcBattery();
         }
 
+        // --- SYSTEME SYNC ---
+        function exportConfig() {
+            const data = {
+                ts: lastCharge,
+                screen: isScreenOn,
+                mains: isMainsConnected,
+                city: savedCity
+            };
+            const str = JSON.stringify(data);
+            navigator.clipboard.writeText(str).then(() => {
+                showToast("Config copiée ! Colle-la sur l'autre appareil.");
+            });
+        }
+
+        async function importConfig() {
+            try {
+                const text = await navigator.clipboard.readText();
+                const data = JSON.parse(text);
+                
+                if(data.ts) {
+                    lastCharge = data.ts;
+                    localStorage.setItem('last_charge_ts', lastCharge);
+                }
+                if(typeof data.screen !== 'undefined') {
+                    isScreenOn = data.screen;
+                    localStorage.setItem('user_screen_on', isScreenOn);
+                    const btn = document.getElementById('screenToggle');
+                    if(isScreenOn) btn.classList.add('on'); else btn.classList.remove('on');
+                }
+                if(typeof data.mains !== 'undefined') {
+                    isMainsConnected = data.mains;
+                    localStorage.setItem('user_mains_connected', isMainsConnected);
+                    const btn = document.getElementById('mainsToggle');
+                    if(isMainsConnected) btn.classList.add('on'); else btn.classList.remove('on');
+                }
+                
+                syncDateInput();
+                calcBattery();
+                showToast("Config synchronisée !");
+                setTimeout(() => location.reload(), 1000); // Reload pour être sûr
+                
+            } catch(e) {
+                showToast("Erreur : Copie d'abord la config !");
+            }
+        }
+
         function smartRefresh() {
             const btn = document.getElementById('refreshBtn');
             btn.querySelector('svg').classList.add('spin');
@@ -560,35 +603,16 @@
             
             if(!isMainsConnected && currentBatteryLevel <= 0) {
                 resetBattery();
-                showToast();
+                showToast("Signal de retour : Batterie 100%");
             }
         }
         
-        function showToast() {
+        function showToast(msg, isAlert = false) {
             const t = document.getElementById('toast');
+            t.innerText = msg;
+            if(isAlert) t.classList.add('alert'); else t.classList.remove('alert');
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 3000);
-        }
-
-        function learnFromDeath() {
-            const deathTimeStr = document.getElementById('deathInput').value;
-            if(!deathTimeStr) { alert("Date invalide"); return; }
-            const deathTime = new Date(deathTimeStr).getTime();
-            const durationMs = deathTime - lastCharge;
-            const durationHours = durationMs / (1000 * 60 * 60);
-            if(durationHours <= 0) { alert("Erreur de date"); return; }
-            
-            let realDrainPerHour = 100 / durationHours;
-            realDrainPerHour += 1.0; 
-            if(isScreenOn) realDrainPerHour -= 3.0; 
-            
-            if(realDrainPerHour < 1) realDrainPerHour = 1;
-            if(realDrainPerHour > 20) realDrainPerHour = 20;
-            
-            baseDrain = realDrainPerHour;
-            localStorage.setItem('learned_base_drain', baseDrain);
-            alert(`Calibré !\nBase conso: ${baseDrain.toFixed(1)}%/h`);
-            calcBattery();
         }
 
         let searchTimeout;
